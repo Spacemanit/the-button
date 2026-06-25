@@ -1,13 +1,16 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import http from "http";
 import app from "./app.js";
 import connectDB from "./config/db.js";
 import initSocket from "./sockets/index.js";
 import { initPressState } from "./controllers/press.controller.js";
 
-dotenv.config();
-const PORT = process.env.PORT || 5000;
+console.log('Testing purpose');
+const PORT = process.env.PORT;
 const server = http.createServer(app);
+
+console.log(PORT)
+console.log(process.env.MONGOURI);
 
 initSocket(server);
 
