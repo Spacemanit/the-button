@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+console.log('Testing purpose');
 import "dotenv/config";
 import http from "http";
 import app from "./app.js";
