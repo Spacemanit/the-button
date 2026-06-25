@@ -1,4 +1,3 @@
-console.log('Testing purpose');
 import "dotenv/config";
 import http from "http";
 import app from "./app.js";
@@ -6,7 +5,7 @@ import connectDB from "./config/db.js";
 import initSocket from "./sockets/index.js";
 import { initPressState } from "./controllers/press.controller.js";
 
-dotenv.config();
+console.log('Testing purpose');
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 
