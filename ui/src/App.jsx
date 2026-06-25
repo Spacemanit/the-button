@@ -34,7 +34,7 @@ function App() {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/leaderboard")
+    axios.get(`${import.meta.env.VITE_SERVER_URL}/api/leaderboard`)
       .then(res => setLeaderboard(res.data));
   }, []);
 
