@@ -35,7 +35,11 @@ function App() {
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_SERVER_URL}/api/leaderboard`)
-      .then(res => setLeaderboard(res.data));
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          setLeaderboard(res.data);
+        }
+      });
   }, []);
 
   useEffect(() => {
@@ -64,7 +68,7 @@ function App() {
 
     // leaderboard update
     socket.on("leaderboard", (data) => {
-      setLeaderboard(data);
+      if (Array.isArray(data)) setLeaderboard(data);
     });
 
     // active user count
