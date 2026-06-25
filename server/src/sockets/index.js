@@ -21,9 +21,8 @@ const startCountdown = (io) => {
     io.emit("timer", countdown);
 
     if (countdown <= 0) {
-      clearInterval(countdownInterval);
-      startCountdown(io);
-      io.emit("timerExpired");
+      countdown=60;
+      io.emit("timer", countdown);
     }
   }, 1000);
 };
