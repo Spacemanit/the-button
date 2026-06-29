@@ -15,20 +15,25 @@ export const initPressState = async () => {
 };
 
 export const handlePress = async (username, countdown) => {
+  const sanitizedUsername = typeof username === "string" ? username.trim() : "";
+  if (!sanitizedUsername) {
+    throw new Error("Username is required");
+  }
+
   const now = Date.now();
   const waitSeconds = 60-countdown;
   const colorTier = getTier(waitSeconds);
 
-  let user = await User.findOne({ username });
+  let user = await User.findOne({ username: sanitizedUsername });
   if (!user) {
-    user = await User.create({ username });
+    user = await User.create({ username: sanitizedUsername });
   } else if (user.totalPresses == 1) {
     throw new Error("User already pressed the button");
   }
 
   const press = await Press.create({
     userId: user._id,
-    username,
+    username: sanitizedUsername,
     waitTime: waitSeconds,
     colorTier
   });
@@ -43,7 +48,7 @@ export const handlePress = async (username, countdown) => {
   pressEmitter.emit('reset');
 
   return {
-    username,
+    username: sanitizedUsername,
     waitSeconds,
     colorTier,
     totalPresses,
