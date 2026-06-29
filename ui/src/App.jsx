@@ -49,12 +49,9 @@ export default function App() {
     setSubmitted(true);
     axios.get(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/api/press/state?username=${encodeURIComponent(nextUsername)}`)
       .then(res => {
-        console.log('App.jsx res.status:', res.status)
-        if (res.status === 100) {
-          console.log('App.jsx 100')
+        if (res.data.alreadyPressed) {
           setHasPressed(true);
-        } else if (res.status === 201) {
-          console.log('App.jsx 201')
+        } else {
           setHasPressed(false);
         }
       });
@@ -62,10 +59,10 @@ export default function App() {
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/api/leaderboard`)
-      .then(res => { 
+      .then(res => {
         if (Array.isArray(res.data))
           setLeaderboard(res.data);
-        });
+      });
   }, []);
 
   useEffect(() => {

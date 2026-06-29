@@ -4,15 +4,12 @@ import { getTotalPresses, getTimeSinceLastPress, getState } from "../controllers
 const router = express.Router();
 
 router.get('/state', async (req, res) => {
-  const data = { totalPresses: getTotalPresses, timeSinceLastPress: getTimeSinceLastPress };
-  const bool = await getState(req.query.username);
-  console.log(bool)
-  if (bool) {
-    console.log('Already Pressed!', req.query.username);
-    res.status(100).json(data);
-  } else {
-    res.status(201).json(data);
-  }
+  const alreadyPressed = await getState(req.query.username);
+  res.status(200).json({
+    totalPresses: getTotalPresses(),
+    timeSinceLastPress: getTimeSinceLastPress(),
+    alreadyPressed
+  });
 });
 
 export default router;
