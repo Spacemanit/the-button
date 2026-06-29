@@ -4,29 +4,29 @@ import socket from './socket';
 
 const TIER_CONFIG = {
   purple: { color: "#a78bfa", border: "#a78bfa40", label: "Purple", range: "50–60s" },
-  blue:   { color: "#60a5fa", border: "#60a5fa40", label: "Blue",   range: "40–49s" },
-  green:  { color: "#4ade80", border: "#4ade8040", label: "Green",  range: "30–39s" },
+  blue: { color: "#60a5fa", border: "#60a5fa40", label: "Blue", range: "40–49s" },
+  green: { color: "#4ade80", border: "#4ade8040", label: "Green", range: "30–39s" },
   yellow: { color: "#facc15", border: "#facc1540", label: "Yellow", range: "20–29s" },
   orange: { color: "#fb923c", border: "#fb923c40", label: "Orange", range: "10–19s" },
-  red:    { color: "#f87171", border: "#f8717140", label: "Red",    range: "0–9s"   },
+  red: { color: "#f87171", border: "#f8717140", label: "Red", range: "0–9s" },
 };
 
 const DEFAULT_COLOR = "#f87171";
 const DEFAULT_BORDER = "#f8717140";
 
 export default function App() {
-  const [theme, setTheme]                   = useState("dark");
-  const [username, setUsername]             = useState("");
-  const [submitted, setSubmitted]           = useState(false);
-  const [hasPressed, setHasPressed]         = useState(false);
-  const [totalPresses, setTotalPresses]     = useState(0);
-  const [activeUsers, setActiveUsers]       = useState(0);
-  const [countdown, setCountdown]           = useState(60);
-  const [lastTier, setLastTier]             = useState(null);
-  const [leaderboard, setLeaderboard]       = useState([]);
+  const [theme, setTheme] = useState("dark");
+  const [username, setUsername] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [hasPressed, setHasPressed] = useState(false);
+  const [totalPresses, setTotalPresses] = useState(0);
+  const [activeUsers, setActiveUsers] = useState(0);
+  const [countdown, setCountdown] = useState(60);
+  const [lastTier, setLastTier] = useState(null);
+  const [leaderboard, setLeaderboard] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
-  const [error, setError]                   = useState(null);
-  const [flashTier, setFlashTier]           = useState(null);
+  const [error, setError] = useState(null);
+  const [flashTier, setFlashTier] = useState(null);
 
   const isDark = theme === "dark";
 
@@ -47,20 +47,21 @@ export default function App() {
     localStorage.setItem("username", nextUsername);
     setUsername(nextUsername);
     setSubmitted(true);
-  };
-
-  useEffect(() => {
-    axios.get(`${import.meta.env.VITE_SERVER_URL}/api/press/state`)
+    axios.get(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/api/press/state`)
       .then(res => {
         if (res.status === 200) {
+          console.log('true')
           setHasPressed(true);
         }
       });
-  }, []);
+  };
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_SERVER_URL}/api/leaderboard`)
-      .then(res => { if (Array.isArray(res.data)) setLeaderboard(res.data); });
+    axios.get(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/api/leaderboard`)
+      .then(res => { 
+        if (Array.isArray(res.data))
+          setLeaderboard(res.data);
+        });
   }, []);
 
   useEffect(() => {
@@ -84,10 +85,10 @@ export default function App() {
     });
     socket.on("leaderboard", d => { if (Array.isArray(d)) setLeaderboard(d); });
     socket.on("activeUsers", c => setActiveUsers(c));
-    socket.on("pressError",  e => setError(e.message));
-    socket.on("timer",       t => setCountdown(t));
+    socket.on("pressError", e => setError(e.message));
+    socket.on("timer", t => setCountdown(t));
     return () => {
-      ["init","pressed","leaderboard","activeUsers","pressError","timer"].forEach(e => socket.off(e));
+      ["init", "pressed", "leaderboard", "activeUsers", "pressError", "timer"].forEach(e => socket.off(e));
     };
   }, []);
 
@@ -97,9 +98,9 @@ export default function App() {
     setHasPressed(true);
   };
 
-  const accentColor  = lastTier ? TIER_CONFIG[lastTier].color  : DEFAULT_COLOR;
+  const accentColor = lastTier ? TIER_CONFIG[lastTier].color : DEFAULT_COLOR;
   const accentBorder = lastTier ? TIER_CONFIG[lastTier].border : DEFAULT_BORDER;
-  const timerColor   = countdown <= 10 ? "#f87171" : countdown <= 25 ? "#fb923c" : "#4ade80";
+  const timerColor = countdown <= 10 ? "#f87171" : countdown <= 25 ? "#fb923c" : "#4ade80";
 
   // ── LOGIN ──────────────────────────────────────────────────
   if (!submitted) {
@@ -263,10 +264,10 @@ export default function App() {
                 const active = i < countdown;
                 const segColor = i >= 50 ? TIER_CONFIG.purple.color
                   : i >= 40 ? TIER_CONFIG.blue.color
-                  : i >= 30 ? TIER_CONFIG.green.color
-                  : i >= 20 ? TIER_CONFIG.yellow.color
-                  : i >= 10 ? TIER_CONFIG.orange.color
-                  : TIER_CONFIG.red.color;
+                    : i >= 30 ? TIER_CONFIG.green.color
+                      : i >= 20 ? TIER_CONFIG.yellow.color
+                        : i >= 10 ? TIER_CONFIG.orange.color
+                          : TIER_CONFIG.red.color;
                 return (
                   <div
                     key={i}
@@ -321,9 +322,9 @@ export default function App() {
           <div className="bg-white dark:bg-neutral-950 border border-black/8 dark:border-white/8
                           rounded-md flex overflow-hidden">
             {[
-              { val: totalPresses.toLocaleString(), key: "presses",  color: isDark ? "#fff" : "#0a0a0a" },
-              { val: activeUsers,                   key: "watching", color: "#4ade80" },
-              { val: `${countdown}s`,               key: "timer",    color: timerColor },
+              { val: totalPresses.toLocaleString(), key: "presses", color: isDark ? "#fff" : "#0a0a0a" },
+              { val: activeUsers, key: "watching", color: "#4ade80" },
+              { val: `${countdown}s`, key: "timer", color: timerColor },
             ].map((s, i) => (
               <div key={i} className="flex flex-1">
                 {i > 0 && (
@@ -399,7 +400,7 @@ export default function App() {
                         className="text-[13px] w-8 text-right flex-shrink-0 tabular-nums"
                         style={{ color: tier?.color }}
                       >
-                        {entry.longestWait}s
+                        {entry.waitTime}s
                       </span>
                     </div>
                   );
