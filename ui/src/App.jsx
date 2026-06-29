@@ -61,6 +61,7 @@ export default function App() {
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_SERVER_URL}/api/leaderboard`)
       .then(res => { if (Array.isArray(res.data)) setLeaderboard(res.data); });
+      .then(res => { if (Array.isArray(res.data)) setLeaderboard(res.data); });
   }, []);
 
   useEffect(() => {
