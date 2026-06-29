@@ -3,11 +3,13 @@ import { getTotalPresses, getTimeSinceLastPress, getState } from "../controllers
 
 const router = express.Router();
 
-router.get('/state', (req, res) => {
+router.get('/state', async (req, res) => {
   const data = { totalPresses: getTotalPresses, timeSinceLastPress: getTimeSinceLastPress };
-  if (getState(req.query.username)) {
-    console.log('Already Pressed!');
-    res.status(200).json(data);
+  const bool = await getState(req.query.username);
+  console.log(bool)
+  if (bool) {
+    console.log('Already Pressed!', req.query.username);
+    res.status(100).json(data);
   } else {
     res.status(201).json(data);
   }

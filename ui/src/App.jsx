@@ -47,11 +47,15 @@ export default function App() {
     localStorage.setItem("username", nextUsername);
     setUsername(nextUsername);
     setSubmitted(true);
-    axios.get(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/api/press/state`)
+    axios.get(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/api/press/state?username=${encodeURIComponent(nextUsername)}`)
       .then(res => {
-        if (res.status === 200) {
-          console.log('true')
+        console.log('App.jsx res.status:', res.status)
+        if (res.status === 100) {
+          console.log('App.jsx 100')
           setHasPressed(true);
+        } else if (res.status === 201) {
+          console.log('App.jsx 201')
+          setHasPressed(false);
         }
       });
   };

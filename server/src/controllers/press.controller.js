@@ -13,11 +13,9 @@ export const initPressState = async () => {
   if (lastPress) lastPressTime = lastPress.pressedAt.getTime();
 };
 
-export const handlePress = async (username) => {
-  const existing = await User.findOne({ username });
-
+export const handlePress = async (username, countdown) => {
   const now = Date.now();
-  const waitTime = Math.floor((now - lastPressTime) / 1000);
+  const waitTime = Math.floor((countdown));
   const colorTier = getTier(waitTime);
 
   await User.create({ username, waitTime, colorTier });
@@ -30,11 +28,7 @@ export const handlePress = async (username) => {
 };
 
 export const getState = async (username) => {
-  const existing = await User.findOne({ username });
-  if (existing) {
-    return true;
-  }
-  return false;
+  return !!(await User.exists({ username }));
 }
 
 export const getTotalPresses  = () => totalPresses;
