@@ -4,53 +4,53 @@ import socket from './socket';
 
 const TIER_CONFIG = {
   purple: { color: "#a78bfa", border: "#a78bfa40", label: "Purple", range: "50–60s" },
-  blue:   { color: "#60a5fa", border: "#60a5fa40", label: "Blue",   range: "40–49s" },
-  green:  { color: "#4ade80", border: "#4ade8040", label: "Green",  range: "30–39s" },
+  blue: { color: "#60a5fa", border: "#60a5fa40", label: "Blue", range: "40–49s" },
+  green: { color: "#4ade80", border: "#4ade8040", label: "Green", range: "30–39s" },
   yellow: { color: "#facc15", border: "#facc1540", label: "Yellow", range: "20–29s" },
   orange: { color: "#fb923c", border: "#fb923c40", label: "Orange", range: "10–19s" },
-  red:    { color: "#f87171", border: "#f8717140", label: "Red",    range: "0–9s"   },
+  red: { color: "#f87171", border: "#f8717140", label: "Red", range: "0–9s" },
 };
 
-const DEFAULT_COLOR  = "#f87171";
+const DEFAULT_COLOR = "#f87171";
 const DEFAULT_BORDER = "#f8717140";
 
 // Theme tokens — single source of truth
 const T = {
   dark: {
-    bg:        "#0a0a0a",
-    surface:   "#111111",
-    border:    "rgba(255,255,255,0.08)",
-    text:      "#ffffff",
+    bg: "#0a0a0a",
+    surface: "#111111",
+    border: "rgba(255,255,255,0.08)",
+    text: "#ffffff",
     textMuted: "rgba(255,255,255,0.35)",
-    textDim:   "rgba(255,255,255,0.18)",
-    navBg:     "#0a0a0a",
-    inputBg:   "#1a1a1a",
+    textDim: "rgba(255,255,255,0.18)",
+    navBg: "#0a0a0a",
+    inputBg: "#1a1a1a",
   },
   light: {
-    bg:        "#f5f4f0",
-    surface:   "#ffffff",
-    border:    "rgba(0,0,0,0.10)",
-    text:      "#0a0a0a",
+    bg: "#f5f4f0",
+    surface: "#ffffff",
+    border: "rgba(0,0,0,0.10)",
+    text: "#0a0a0a",
     textMuted: "rgba(0,0,0,0.45)",
-    textDim:   "rgba(0,0,0,0.25)",
-    navBg:     "#f5f4f0",
-    inputBg:   "#eceae4",
+    textDim: "rgba(0,0,0,0.25)",
+    navBg: "#f5f4f0",
+    inputBg: "#eceae4",
   },
 };
 
 export default function App() {
-  const [theme, setTheme]             = useState("dark");
-  const [username, setUsername]       = useState("");
-  const [submitted, setSubmitted]     = useState(false);
-  const [hasPressed, setHasPressed]   = useState(false);
+  const [theme, setTheme] = useState("dark");
+  const [username, setUsername] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [hasPressed, setHasPressed] = useState(false);
   const [totalPresses, setTotalPresses] = useState(0);
   const [activeUsers, setActiveUsers] = useState(0);
-  const [countdown, setCountdown]     = useState(60);
-  const [lastTier, setLastTier]       = useState(null);
+  const [countdown, setCountdown] = useState(60);
+  const [lastTier, setLastTier] = useState(null);
   const [leaderboard, setLeaderboard] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
-  const [error, setError]             = useState(null);
-  const [flashTier, setFlashTier]     = useState(null);
+  const [error, setError] = useState(null);
+  const [flashTier, setFlashTier] = useState(null);
 
   const c = T[theme]; // current theme tokens
   const isDark = theme === "dark";
@@ -103,10 +103,10 @@ export default function App() {
     });
     socket.on("leaderboard", d => { if (Array.isArray(d)) setLeaderboard(d); });
     socket.on("activeUsers", c => setActiveUsers(c));
-    socket.on("pressError",  e => setError(e.message));
-    socket.on("timer",       t => setCountdown(t));
+    socket.on("pressError", e => setError(e.message));
+    socket.on("timer", t => setCountdown(t));
     return () => {
-      ["init","pressed","leaderboard","activeUsers","pressError","timer"].forEach(e => socket.off(e));
+      ["init", "pressed", "leaderboard", "activeUsers", "pressError", "timer"].forEach(e => socket.off(e));
     };
   }, []);
 
@@ -116,9 +116,9 @@ export default function App() {
     setHasPressed(true);
   };
 
-  const accentColor  = lastTier ? TIER_CONFIG[lastTier].color  : DEFAULT_COLOR;
+  const accentColor = lastTier ? TIER_CONFIG[lastTier].color : DEFAULT_COLOR;
   const accentBorder = lastTier ? TIER_CONFIG[lastTier].border : DEFAULT_BORDER;
-  const timerColor   = countdown <= 10 ? "#f87171" : countdown <= 25 ? "#fb923c" : "#4ade80";
+  const timerColor = countdown <= 10 ? "#f87171" : countdown <= 25 ? "#fb923c" : "#4ade80";
 
   // shared card style
   const card = {
@@ -288,10 +288,10 @@ export default function App() {
                   const active = i < countdown;
                   const segColor = i >= 50 ? TIER_CONFIG.purple.color
                     : i >= 40 ? TIER_CONFIG.blue.color
-                    : i >= 30 ? TIER_CONFIG.green.color
-                    : i >= 20 ? TIER_CONFIG.yellow.color
-                    : i >= 10 ? TIER_CONFIG.orange.color
-                    : TIER_CONFIG.red.color;
+                      : i >= 30 ? TIER_CONFIG.green.color
+                        : i >= 20 ? TIER_CONFIG.yellow.color
+                          : i >= 10 ? TIER_CONFIG.orange.color
+                            : TIER_CONFIG.red.color;
                   return (
                     <div key={i} style={{ flex: 1, height: "3px", borderRadius: "1px", minWidth: 0, background: active ? segColor : c.border, transition: "background 0.2s" }} />
                   );
@@ -339,9 +339,9 @@ export default function App() {
             {/* Stats strip */}
             <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: "8px", display: "flex", overflow: "hidden" }}>
               {[
-                { val: totalPresses.toLocaleString(), key: "presses",  color: c.text },
-                { val: activeUsers,                   key: "watching", color: "#4ade80" },
-                { val: `${countdown}s`,               key: "timer",    color: timerColor },
+                { val: totalPresses.toLocaleString(), key: "presses", color: c.text },
+                { val: activeUsers, key: "watching", color: "#4ade80" },
+                { val: `${countdown}s`, key: "timer", color: timerColor },
               ].map((s, i) => (
                 <div key={i} style={{ display: "flex", flex: 1 }}>
                   {i > 0 && <div style={divider} />}
@@ -438,6 +438,27 @@ export default function App() {
 
           </div>
         </main>
+        <footer style={{ borderTop: `1px solid ${c.border}`, padding: "24px", marginTop: "20px" }}>
+          <div style={{ maxWidth: "1000px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+
+            <span style={{ fontSize: "11px", color: c.textDim }}>
+              built by Maanit Bisht
+            </span>
+
+            <div style={{ display: "flex", gap: "16px" }}>
+              <a href="https://github.com/Spacemanit" target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: c.textMuted, textDecoration: "none", letterSpacing: "0.5px" }}>
+                github
+              </a>
+              <a href="https://www.linkedin.com/in/manit-bisht-6519b836a/" target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: c.textMuted, textDecoration: "none", letterSpacing: "0.5px" }}>
+                linkedin
+              </a>
+              <a href="mailto:manit.bisht2007@gmail.com" style={{ fontSize: "11px", color: c.textMuted, textDecoration: "none", letterSpacing: "0.5px" }}>
+                email
+              </a>
+            </div>
+
+          </div>
+        </footer>
       </div>
     </>
   );
