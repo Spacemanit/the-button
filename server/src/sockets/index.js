@@ -8,6 +8,7 @@ import {
 import { getLeaderboard } from "../controllers/leaderboard.controller.js";
 
 let activeUsers = 0;
+let totalUsers = 0;
 let countdown = 60; // global timer
 let countdownInterval = null;
 
@@ -45,15 +46,18 @@ const initSocket = (server) => {
 
   io.on("connection", (socket) => {
     activeUsers++;
+    totalUsers++;
 
     // send current countdown immediately on connect
     socket.emit("init", {
       totalPresses: getTotalPresses(),
       activeUsers,
+      totalUsers,
       timer: countdown // ← send current timer value, not time since last press
     });
 
     io.emit("activeUsers", activeUsers);
+    io.emit("totalUsers", totalUsers);
 
     socket.on("press", async (username) => {
       try {
