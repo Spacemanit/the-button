@@ -442,7 +442,7 @@ export default function App() {
           <div style={{ maxWidth: "1000px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
 
             <span style={{ fontSize: "11px", color: c.textDim }}>
-              built by Maanit Bisht
+              built by Manit Bisht
             </span>
 
             <div style={{ display: "flex", gap: "16px" }}>
