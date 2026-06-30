@@ -45,7 +45,6 @@ export default function App() {
   const [hasPressed, setHasPressed] = useState(false);
   const [totalPresses, setTotalPresses] = useState(0);
   const [activeUsers, setActiveUsers] = useState(0);
-  const [totalUsers, setTotalUsers] = useState(0);
   const [countdown, setCountdown] = useState(60);
   const [lastTier, setLastTier] = useState(null);
   const [leaderboard, setLeaderboard] = useState([]);
@@ -88,14 +87,12 @@ export default function App() {
       setTotalPresses(d.totalPresses);
       setCountdown(d.timer);
       setActiveUsers(d.activeUsers);
-      setTotalUsers(d.totalUsers);
     });
     socket.on("pressed", d => {
       triggerFlash(d.colorTier);
       setTotalPresses(d.totalPresses);
       setCountdown(60);
       setActiveUsers(d.activeUsers);
-      setTotalUsers(d.totalUsers);
       setLastTier(d.colorTier);
       setRecentActivity(prev => [{
         id: Date.now(),
@@ -106,7 +103,6 @@ export default function App() {
     });
     socket.on("leaderboard", d => { if (Array.isArray(d)) setLeaderboard(d); });
     socket.on("activeUsers", c => setActiveUsers(c));
-    socket.on("totalUsers", c => setTotalUsers(c));
     socket.on("pressError", e => setError(e.message));
     socket.on("timer", t => setCountdown(t));
     return () => {
@@ -238,7 +234,6 @@ export default function App() {
 
             <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <span style={{ fontSize: "11px", color: c.textMuted, letterSpacing: "0.5px" }}>{totalUsers} total users</span>
                 <span className="live-pulse" style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4ade80", flexShrink: 0 }} />
                 <span style={{ fontSize: "11px", color: c.textMuted, letterSpacing: "0.5px" }}>{activeUsers} watching</span>
               </div>
